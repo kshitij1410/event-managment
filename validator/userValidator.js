@@ -1,0 +1,44 @@
+const { check, validationResult } = require("express-validator");
+
+exports.validateRegisterRequest = [
+  check("firstName").notEmpty().withMessage("first name is required"),
+  check("lastName").notEmpty().withMessage("last name is required"),
+  check("email").isEmail().withMessage("Please type correct email"),
+  check("password")
+    .isLength({ min: 6 })
+    .withMessage("password is required with 6 character"),
+];
+
+exports.validateLoginRequest = [
+  check("email").isEmail().withMessage("Please type correct email"),
+  check("password")
+    .isLength({ min: 6 })
+    .withMessage("password is required with 6 character"),
+];
+
+exports.isRequestValidated = (req, res, next) => {
+  const errors = validationResult(req);
+  if (errors.array().length > 0) {
+    return res.status(400).json({ error: errors.array()[0].msg });
+  } else {
+    next();
+  }
+};
+exports.validateUpdatePasswordInput = [
+  check("oldPassword")
+    .isLength({ min: 6 })
+    .withMessage("password is required with 6 character"),
+  check("newPassword")
+    .isLength({ min: 6 })
+    .withMessage("password is required with 6 character"),
+];
+
+exports.validateResetPasswordInput = [
+  check("email").isEmail().withMessage("Please type correct email")
+];
+
+exports.validateChangePasswordInput = [
+  check("newPassword")
+    .isLength({ min: 6 })
+    .withMessage("password is required with 6 character")
+];
